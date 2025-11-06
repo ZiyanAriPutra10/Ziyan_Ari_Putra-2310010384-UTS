@@ -3,6 +3,7 @@ package model;
 import java.time.LocalDate;
 
 
+
 /**
  * Kelas Transaksi merepresentasikan entri pemasukan atau pengeluaran.
  * Menerapkan prinsip Encapsulation (data fields private).
