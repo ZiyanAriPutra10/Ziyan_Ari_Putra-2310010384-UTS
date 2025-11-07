@@ -1,8 +1,7 @@
 package model;
 
 import java.time.LocalDate;
-
-
+import java.time.format.DateTimeFormatter;
 
 /**
  * Kelas Transaksi merepresentasikan entri pemasukan atau pengeluaran.
@@ -14,6 +13,9 @@ public class Transaksi {
     private String deskripsi;
     private double jumlah;
     private String jenis; // "Pemasukan" atau "Pengeluaran"
+    
+    private static final DateTimeFormatter formatter = 
+        DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
     // Constructor 1
     public Transaksi(LocalDate tanggal, String deskripsi, double jumlah, String jenis) {
@@ -39,15 +41,27 @@ public class Transaksi {
     public String getJenis() { return jenis; }
     public void setJenis(String jenis) { this.jenis = jenis; }
     
+    public String getTanggalFormatted() {
+        return tanggal.format(formatter);
+    }
+    
     /**
      * Polymorphism: Overriding toString() untuk tampilan di JList.
      * @return String format transaksi.
      */
     @Override
     public String toString() {
-        String tanda = jenis.equals("Pengeluaran") ? "-" : "+";
-        // Menggunakan format mata uang Indonesia untuk jumlah
-        return String.format("[%s] %s | %s%,.2f (%s)", 
-                             tanggal, deskripsi, tanda, jumlah, jenis);
+        String tanda = jenis.equals("Pengeluaran") ? "➖" : "➕";
+        String warna = jenis.equals("Pengeluaran") ? "MERAH" : "HIJAU";
+        return String.format("%s %s | Rp%,.2f | %s", 
+                           tanda, deskripsi, jumlah, getTanggalFormatted());
+    }
+    
+    /**
+     * Method untuk keperluan display di GUI
+     */
+    public String toDisplayString() {
+        return String.format("<html><b>%s</b> - Rp%,.2f<br><small>%s | %s</small></html>", 
+                           deskripsi, jumlah, getTanggalFormatted(), jenis);
     }
 }

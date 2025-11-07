@@ -6,6 +6,9 @@ import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.time.LocalDate;
 
+/**
+ * Adapter untuk Gson agar bisa handle LocalDate
+ */
 public class LocalDateAdapter extends TypeAdapter<LocalDate> {
     @Override
     public void write(JsonWriter jsonWriter, LocalDate localDate) throws IOException {

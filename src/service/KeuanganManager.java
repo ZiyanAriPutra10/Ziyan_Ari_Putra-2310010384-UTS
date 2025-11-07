@@ -21,6 +21,13 @@ public class KeuanganManager {
 
     public KeuanganManager() {
         this.daftarTransaksi = new ArrayList<>();
+        tambahDataContoh();
+    }
+    
+    private void tambahDataContoh() {
+        daftarTransaksi.add(new Transaksi(LocalDate.now(), "Gaji Bulanan", 5000000.0, "Pemasukan"));
+        daftarTransaksi.add(new Transaksi(LocalDate.now().minusDays(2), "Belanja Bulanan", 1500000.0, "Pengeluaran"));
+        daftarTransaksi.add(new Transaksi(LocalDate.now().minusDays(5), "Freelance Project", 2500000.0, "Pemasukan"));
     }
 
     // --- METODE CRUD (Create, Read, Update, Delete) ---
@@ -38,19 +45,28 @@ public class KeuanganManager {
     }
     
     // Update: Mengubah entri
-    public boolean ubahTransaksi(Transaksi transaksiLama, Transaksi transaksiBaru) {
-        // Mencari index transaksi lama
-        int index = daftarTransaksi.indexOf(transaksiLama);
-        if (index != -1) {
-            daftarTransaksi.set(index, transaksiBaru); // Mengganti objek
+    public boolean ubahTransaksi(int index, Transaksi transaksiBaru) {
+        if (index >= 0 && index < daftarTransaksi.size()) {
+            daftarTransaksi.set(index, transaksiBaru);
             return true;
         }
         return false;
     }
 
     // Delete: Menghapus entri
-    public boolean hapusTransaksi(Transaksi t) {
-        return daftarTransaksi.remove(t);
+    public boolean hapusTransaksi(int index) {
+        if (index >= 0 && index < daftarTransaksi.size()) {
+            daftarTransaksi.remove(index);
+            return true;
+        }
+        return false;
+    }
+    
+    public Transaksi getTransaksi(int index) {
+        if (index >= 0 && index < daftarTransaksi.size()) {
+            return daftarTransaksi.get(index);
+        }
+        return null;
     }
     
     // --- METODE LAINNYA ---
@@ -65,6 +81,24 @@ public class KeuanganManager {
                .sum();
     }
     
+    public double totalPemasukan() {
+        return daftarTransaksi.stream()
+               .filter(t -> t.getJenis().equals("Pemasukan"))
+               .mapToDouble(Transaksi::getJumlah)
+               .sum();
+    }
+    
+    public double totalPengeluaran() {
+        return daftarTransaksi.stream()
+               .filter(t -> t.getJenis().equals("Pengeluaran"))
+               .mapToDouble(Transaksi::getJumlah)
+               .sum();
+    }
+    
+    public int getJumlahTransaksi() {
+        return daftarTransaksi.size();
+    }
+
     // --- TANTANGAN (EKSPOR/IMPOR DATA JSON) ---
 
     // Ekspor Data ke JSON
